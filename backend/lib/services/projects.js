@@ -183,9 +183,8 @@ exports.create = async function ({ user, body }) {
   }
   const timeout = exports.projectInitializationTimeout
   // must be the dashboardClient because rbac rolebinding does not exist yet
-  project = await dashboardClient['core.gardener.cloud'].projects
-    .watch(name)
-    .waitFor(isProjectReady, { timeout })
+  const asyncIterable = await dashboardClient['core.gardener.cloud'].projects.watch(name)
+  project = await asyncIterable.until(({ object }) => isProjectReady(object), { timeout })
 
   return fromResource(project)
 }

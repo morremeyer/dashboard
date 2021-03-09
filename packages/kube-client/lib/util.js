@@ -43,7 +43,7 @@ function setAuthorization (options, type, credentials) {
 }
 
 function setContentType (options, value) {
-  return setHeader(options, 'Content-Type', value)
+  return setHeader(options, 'content-type', value)
 }
 
 function setPatchType (options, type = PatchType.MERGE) {

@@ -11,8 +11,10 @@ const { isHttpError } = require('http-errors')
 const { TimeoutError } = require('p-timeout')
 
 const CONNECTION_ERROR_CODES = [
+  'ECONNREFUSED',
   'ETIMEDOUT',
-  'ECONNREFUSED'
+  'ENETUNREACH',
+  'ERR_HTTP2_PING_CANCEL'
 ]
 
 class StatusError extends Error {
@@ -97,6 +99,10 @@ function isConnectionRefused (err) {
   return includes(CONNECTION_ERROR_CODES, err.code) || isTimeoutError(err)
 }
 
+function isAbortError (err) {
+  return err.code === 'ABORT_ERR' || err.name === 'AbortError'
+}
+
 module.exports = {
   StatusError,
   CacheExpiredError,
@@ -107,5 +113,6 @@ module.exports = {
   isTooLargeResourceVersionError,
   isGatewayTimeout,
   hasStatusCauseResourceVersionTooLarge,
-  isConnectionRefused
+  isConnectionRefused,
+  isAbortError
 }

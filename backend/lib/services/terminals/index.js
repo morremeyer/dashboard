@@ -110,9 +110,8 @@ function findImageDescription (containerImage, containerImageDescriptions) {
 exports.findImageDescription = findImageDescription
 
 async function readServiceAccountToken (client, { namespace, serviceAccountName }) {
-  const serviceAccount = await client.core.serviceaccounts
-    .watch(namespace, serviceAccountName)
-    .waitFor(isServiceAccountReady, { timeout: 10 * 1000 })
+  const asyncIterable = await client.core.serviceaccounts.watch(namespace, serviceAccountName)
+  const serviceAccount = await asyncIterable.until(({ object }) => isServiceAccountReady(object), { timeout: 10 * 1000 })
   const secretName = getFirstServiceAccountSecret(serviceAccount)
   if (secretName) {
     const secret = await client.core.secrets.get(namespace, secretName)
@@ -493,7 +492,7 @@ function createTarget ({ kubeconfigContextNamespace, apiServer, credentials, aut
   }
 }
 
-function readTerminalUntilReady ({ user, namespace, name }) {
+async function readTerminalUntilReady ({ user, namespace, name }) {
   const username = user.id
   const client = user.client
 
@@ -505,9 +504,8 @@ function readTerminalUntilReady ({ user, namespace, name }) {
     const attachServiceAccountName = _.get(terminal, 'status.attachServiceAccountName')
     return podName && attachServiceAccountName
   }
-  return client['dashboard.gardener.cloud'].terminals
-    .watch(namespace, name)
-    .waitFor(isTerminalReady, { timeout: 60 * 1000 })
+  const asyncIterable = await client['dashboard.gardener.cloud'].terminals.watch(namespace, name)
+  return asyncIterable.until(({ object }) => isTerminalReady(object), { timeout: 60 * 1000 })
 }
 
 async function getOrCreateTerminalSession ({ user, namespace, name, target, body = {} }) {

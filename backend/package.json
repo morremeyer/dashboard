@@ -67,6 +67,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "abort-controller": "^3.0.0",
     "dockerfile-ast": "^0.0.19",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
@@ -76,7 +77,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "fast-json-patch": "^3.0.0-1",
-    "jest": "^26.4.2",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.2",
     "path-to-regexp": "^6.2.0",
     "set-cookie-parser": "^2.3.5",
@@ -152,7 +153,7 @@
     ]
   },
   "engines": {
-    "node": "^14.15.0",
-    "yarn": "^2.3.3"
+    "node": "^15.8.0",
+    "yarn": "^2.4.0"
   }
 }

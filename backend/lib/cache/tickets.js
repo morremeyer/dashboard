@@ -13,14 +13,12 @@ function init () {
   const commentsForIssues = {} // we could also think of getting rid of the comments cache
   const emitter = new EventEmitter()
 
-  function onIssue (fn) {
-    logger.debug('listening on issues cache changes')
-    emitter.on('issue', fn)
+  function on (eventName, listener) {
+    emitter.on(eventName, listener)
   }
 
-  function onComment (fn) {
-    logger.debug('listening on comments cache changes')
-    emitter.on('comment', fn)
+  function off (eventName, listener) {
+    emitter.off(eventName, listener)
   }
 
   function emit (kind, type, object) {
@@ -135,8 +133,8 @@ function init () {
 
   return {
     emitter,
-    onIssue,
-    onComment,
+    on,
+    off,
     getIssue,
     getIssues,
     getCommentsForIssue,

@@ -44,6 +44,7 @@
     "ws": "^7.0.1"
   },
   "devDependencies": {
+    "abort-controller": "^3.0.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
@@ -52,7 +53,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "express": "^4.17.1",
-    "jest": "^26.4.2"
+    "jest": "^26.6.3"
   },
   "eslintConfig": {
     "env": {
@@ -69,7 +70,9 @@
       "standard",
       "plugin:jest/recommended"
     ],
-    "globals": {},
+    "globals": {
+      "fixtures": true
+    },
     "parserOptions": {
       "ecmaVersion": 11
     },
@@ -81,7 +84,14 @@
     "restoreMocks": true,
     "verbose": true,
     "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "lib/**/*.js"
+    ],
     "testEnvironment": "node",
+    "transformIgnorePatterns": [
+      "/node_modules/",
+      "\\.pnp\\.[^\\/]+$"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 70,
@@ -89,10 +99,13 @@
         "lines": 92,
         "statements": 92
       }
-    }
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "engines": {
-    "node": "^14.15.0",
-    "yarn": "^2.3.3"
+    "node": "^15.8.0",
+    "yarn": "^2.4.0"
   }
 }
