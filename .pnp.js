@@ -2487,8 +2487,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@gardener-dashboard/logger", "workspace:packages/logger"],
             ["@gardener-dashboard/request", "workspace:packages/request"],
             ["abort-controller", "npm:3.0.0"],
-            ["agentkeepalive", "npm:4.1.3"],
-            ["base64url", "npm:3.0.1"],
             ["delay", "npm:4.4.0"],
             ["eslint", "npm:7.9.0"],
             ["eslint-config-standard", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:14.1.1"],
@@ -2505,12 +2503,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mixwith", "npm:0.1.1"],
             ["moment", "npm:2.29.0"],
             ["node-forge", "npm:0.10.0"],
-            ["p-event", "npm:4.2.0"],
-            ["p-retry", "npm:4.2.0"],
-            ["p-timeout", "npm:3.2.0"],
-            ["reconnect-core", "npm:1.3.0"],
-            ["uuid", "npm:8.3.0"],
-            ["ws", "virtual:0029c64cedb03afb3e8f955289eb8fb53c28afb692fc03c927d60b43257499232baab01f458ec4d93b5d0c987193b1cd454e1b6033d004694545f8cc7e80dd50#npm:7.3.1"]
+            ["uuid", "npm:8.3.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -4866,18 +4859,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["agentkeepalive", [
-        ["npm:4.1.3", {
-          "packageLocation": "./.yarn/cache/agentkeepalive-npm-4.1.3-eb7629aade-3e3f331d3a.zip/node_modules/agentkeepalive/",
-          "packageDependencies": [
-            ["agentkeepalive", "npm:4.1.3"],
-            ["debug", "virtual:d27045f313cae7cbc212b229738d5843f6d2265eba3ea36069f78075a79d301bc17e702a21a7b811ca9aa59de4cb7943fb27cda91a0e7d8a8ad547668124b185#npm:4.1.1"],
-            ["depd", "npm:1.1.2"],
-            ["humanize-ms", "npm:1.2.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["aggregate-error", [
         ["npm:3.1.0", {
           "packageLocation": "./.yarn/cache/aggregate-error-npm-3.1.0-415a406f4e-704d2001a3.zip/node_modules/aggregate-error/",
@@ -5788,16 +5769,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/backo2-npm-1.0.2-e933aab18a-72f19a0fd2.zip/node_modules/backo2/",
           "packageDependencies": [
             ["backo2", "npm:1.0.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["backoff", [
-        ["npm:2.5.0", {
-          "packageLocation": "./.yarn/cache/backoff-npm-2.5.0-2f29e91e19-1960b244a6.zip/node_modules/backoff/",
-          "packageDependencies": [
-            ["backoff", "npm:2.5.0"],
-            ["precond", "npm:0.2.3"]
           ],
           "linkType": "HARD",
         }]
@@ -11487,16 +11458,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["humanize-ms", [
-        ["npm:1.2.1", {
-          "packageLocation": "./.yarn/cache/humanize-ms-npm-1.2.1-e942bd7329-4a08769434.zip/node_modules/humanize-ms/",
-          "packageDependencies": [
-            ["humanize-ms", "npm:1.2.1"],
-            ["ms", "npm:2.1.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["iconv-lite", [
         ["npm:0.4.24", {
           "packageLocation": "./.yarn/cache/iconv-lite-npm-0.4.24-c5c4ac6695-a9b9521066.zip/node_modules/iconv-lite/",
@@ -17023,15 +16984,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["precond", [
-        ["npm:0.2.3", {
-          "packageLocation": "./.yarn/cache/precond-npm-0.2.3-38667bd5cd-a2d4832e20.zip/node_modules/precond/",
-          "packageDependencies": [
-            ["precond", "npm:0.2.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["prelude-ls", [
         ["npm:1.1.2", {
           "packageLocation": "./.yarn/cache/prelude-ls-npm-1.1.2-a0daac0886-189c969c92.zip/node_modules/prelude-ls/",
@@ -17601,16 +17553,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["rechoir", "npm:0.6.2"],
             ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["reconnect-core", [
-        ["npm:1.3.0", {
-          "packageLocation": "./.yarn/cache/reconnect-core-npm-1.3.0-4623603fc5-e5e4f15c7f.zip/node_modules/reconnect-core/",
-          "packageDependencies": [
-            ["reconnect-core", "npm:1.3.0"],
-            ["backoff", "npm:2.5.0"]
           ],
           "linkType": "HARD",
         }]

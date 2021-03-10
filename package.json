@@ -21,6 +21,9 @@
   "dependenciesMeta": {
     "deasync": {
       "built": false
+    },
+    "fsevents": {
+      "built": false
     }
   },
   "devDependencies": {
@@ -28,7 +31,7 @@
     "node-gyp": "latest"
   },
   "engines": {
-    "node": "^15.8.0",
-    "yarn": "^2.4.0"
+    "node": "^15.11.0",
+    "yarn": "^2.4.1"
   }
 }

@@ -1421,8 +1421,6 @@ __metadata:
     "@gardener-dashboard/logger": "workspace:*"
     "@gardener-dashboard/request": "workspace:*"
     abort-controller: ^3.0.0
-    agentkeepalive: ^4.1.0
-    base64url: ^3.0.1
     delay: ^4.3.0
     eslint: ^7.7.0
     eslint-config-standard: ^14.1.1
@@ -1439,12 +1437,7 @@ __metadata:
     mixwith: ^0.1.1
     moment: ^2.24.0
     node-forge: ^0.10.0
-    p-event: ^4.1.0
-    p-retry: ^4.2.0
-    p-timeout: ^3.2.0
-    reconnect-core: ^1.3.0
     uuid: ^8.3.0
-    ws: ^7.0.1
   languageName: unknown
   linkType: soft
 
@@ -1973,7 +1966,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-token@npm:^2.4.0":
+"@octokit/auth-token@npm:^2.4.1":
   version: 2.4.2
   resolution: "@octokit/auth-token@npm:2.4.2"
   dependencies:
@@ -2061,7 +2054,7 @@ __metadata:
   version: 16.43.2
   resolution: "@octokit/rest@npm:16.43.2"
   dependencies:
-    "@octokit/auth-token": ^2.4.0
+    "@octokit/auth-token": ^2.4.1
     "@octokit/plugin-paginate-rest": ^1.1.1
     "@octokit/plugin-request-log": ^1.0.0
     "@octokit/plugin-rest-endpoint-methods": 2.4.0
@@ -2421,7 +2414,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/normalize-package-data@npm:^2.4.0":
+"@types/normalize-package-data@npm:^2.4.1":
   version: 2.4.0
   resolution: "@types/normalize-package-data@npm:2.4.0"
   checksum: 6d077e73be7ac6227b678829c7bd765607136cdef537fd4ee7f368d9302a651aea924254d69826663322048436d90d6e7c679c9aa99c4824a687c568aab8ce4f
@@ -3359,17 +3352,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agentkeepalive@npm:^4.1.0":
-  version: 4.1.3
-  resolution: "agentkeepalive@npm:4.1.3"
-  dependencies:
-    debug: ^4.1.0
-    depd: ^1.1.2
-    humanize-ms: ^1.2.1
-  checksum: 3e3f331d3a32bc81e0e35a4655e16aa3d1d61bf9a91a6346ca2540d697bc4863129aff00c1c2b487b64a0d2f711e0534390d5baddb0f6e258cf19bc6db549031
-  languageName: node
-  linkType: hard
-
 "aggregate-error@npm:^3.0.0":
   version: 3.1.0
   resolution: "aggregate-error@npm:3.1.0"
@@ -4031,7 +4013,7 @@ __metadata:
   version: 6.26.0
   resolution: "babel-runtime@npm:6.26.0"
   dependencies:
-    core-js: ^2.4.0
+    core-js: ^2.4.1
     regenerator-runtime: ^0.11.0
   checksum: 5010bf1d81e484d9c6a5b4e4c32564a0dc180c2dc5a65f999729c3cb63b9c6e805d3d10c19a4ccc2112bce084e39e51e52daf5c21df0141ce8e6e37727af2e0b
   languageName: node
@@ -4092,15 +4074,6 @@ __metadata:
   version: 1.0.2
   resolution: "backo2@npm:1.0.2"
   checksum: 72f19a0fd2b573f5504adf1f2e74e7658eec000e7732ebd5f622b6b1d520187277a5e8310787906455d02fcf915f35c5c48e54c997bed1a60b95355db8f2ccab
-  languageName: node
-  linkType: hard
-
-"backoff@npm:~2.5.0":
-  version: 2.5.0
-  resolution: "backoff@npm:2.5.0"
-  dependencies:
-    precond: 0.2
-  checksum: 1960b244a6e9d4098072a0d85bda538a392ce7ceaf76567e4800894cb7cd7589f59c6ceca3a7fdfbd45ec51926483fe6f108e14dd7029bd0bb52889c52fee585
   languageName: node
   linkType: hard
 
@@ -5041,7 +5014,7 @@ __metadata:
   dependencies:
     chalk: ^3.0.0
     highlight.js: ^9.6.0
-    mz: ^2.4.0
+    mz: ^2.4.1
     parse5: ^5.1.1
     parse5-htmlparser2-tree-adapter: ^5.1.1
     yargs: ^15.0.0
@@ -5561,7 +5534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^2.4.0":
+"core-js@npm:^2.4.1":
   version: 2.6.11
   resolution: "core-js@npm:2.6.11"
   checksum: 39ad00b46deaecf344470ef940949b58c4b15e71608a98e8ac7429cd16e485b829f9720d44a44b5f4dee966ff04a18baf5283feb8aaba2cb59ce2c25fa72b88c
@@ -5612,7 +5585,7 @@ __metadata:
     inherits: ^2.0.1
     md5.js: ^1.3.4
     ripemd160: ^2.0.1
-    sha.js: ^2.4.0
+    sha.js: ^2.4.1
   checksum: 5565182efc3603e4d34c3ce13fd0765a058b27f91e49ba8e720e30ba8bfc53e9cd835e5343136000b6f210a979fe1041a4f3fe728e866e64f34db04b068fd725
   languageName: node
   linkType: hard
@@ -6268,7 +6241,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"depd@npm:^1.1.2, depd@npm:~1.1.2":
+"depd@npm:~1.1.2":
   version: 1.1.2
   resolution: "depd@npm:1.1.2"
   checksum: f45566ff7019a346852f095768a380778ed544de24e103b479fd5d3e61982d670efbb5234c09d0588d7fdb09c26c48283d7150e4be5e6ce5d3d37cd268d75c4d
@@ -8119,6 +8092,8 @@ fsevents@^1.2.7:
   dependenciesMeta:
     deasync:
       built: false
+    fsevents:
+      built: false
   languageName: unknown
   linkType: soft
 
@@ -8911,15 +8886,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"humanize-ms@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "humanize-ms@npm:1.2.1"
-  dependencies:
-    ms: ^2.0.0
-  checksum: 4a08769434132a229a6153e77c869a9fe7132dc003d90119d54958e7b75feb65a3c4eca19fb18921568878ac455b6f399013279ad33248d94bd61a25def1fdda
-  languageName: node
-  linkType: hard
-
 "iconv-lite@npm:0.4.24, iconv-lite@npm:^0.4.24":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
@@ -9134,7 +9100,7 @@ fsevents@^1.2.7:
     figures: ^3.0.0
     lodash: ^4.17.19
     mute-stream: 0.0.8
-    run-async: ^2.4.0
+    run-async: ^2.4.1
     rxjs: ^6.6.0
     string-width: ^4.1.0
     strip-ansi: ^6.0.0
@@ -11315,7 +11281,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"loader-runner@npm:^2.3.1, loader-runner@npm:^2.4.0":
+"loader-runner@npm:^2.3.1, loader-runner@npm:^2.4.1":
   version: 2.4.0
   resolution: "loader-runner@npm:2.4.0"
   checksum: 9173b602e82801c734d5f78fdbcb7f2de2dd8f68ef0afb9793bd2cc9eab37cd0bc99fda020f83204b5acdcf2ea23d062c49767778c6c1108f6c90face5dde225
@@ -12091,7 +12057,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"ms@npm:^2.0.0, ms@npm:^2.1.1":
+"ms@npm:^2.1.1":
   version: 2.1.2
   resolution: "ms@npm:2.1.2"
   checksum: 9b65fb709bc30c0c07289dcbdb61ca032acbb9ea5698b55fa62e2cebb04c5953f1876a1f3f7f4bc2e91d4bf4d86003f3e207c3bc6ee2f716f99827e62389cd0e
@@ -12124,7 +12090,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mz@npm:^2.4.0":
+"mz@npm:^2.4.1":
   version: 2.7.0
   resolution: "mz@npm:2.7.0"
   dependencies:
@@ -13941,13 +13907,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"precond@npm:0.2":
-  version: 0.2.3
-  resolution: "precond@npm:0.2.3"
-  checksum: a2d4832e20efdaf725dd33b9945db5bd973f04030aec60607ac10625f22246195aa683ee2bd8b6e9b9884c773cf75db4d783ba52fe32df91461d92f8251193fb
-  languageName: node
-  linkType: hard
-
 "prelude-ls@npm:^1.2.1":
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
@@ -14377,7 +14336,7 @@ fsevents@^1.2.7:
   version: 5.2.0
   resolution: "read-pkg@npm:5.2.0"
   dependencies:
-    "@types/normalize-package-data": ^2.4.0
+    "@types/normalize-package-data": ^2.4.1
     normalize-package-data: ^2.5.0
     parse-json: ^5.0.0
     type-fest: ^0.6.0
@@ -14446,15 +14405,6 @@ fsevents@^1.2.7:
   dependencies:
     resolve: ^1.1.6
   checksum: 6646a6bce733282d182bf04816b15d4e2d63736b3453cf62a8568aaa1399621a73b3942315161f549e090f9a3c61bc09f4cb674f928c369a40037621e10295bd
-  languageName: node
-  linkType: hard
-
-"reconnect-core@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "reconnect-core@npm:1.3.0"
-  dependencies:
-    backoff: ~2.5.0
-  checksum: e5e4f15c7f39408210f3d5a7499804887b28b2711136114f508bce48bf9a71b9324bcf583e230c6f338c2b99f0cce19311774f886f819cc424372b320777aeec
   languageName: node
   linkType: hard
 
@@ -14930,7 +14880,7 @@ resolve@^1.18.1:
   languageName: node
   linkType: hard
 
-"run-async@npm:^2.4.0":
+"run-async@npm:^2.4.1":
   version: 2.4.1
   resolution: "run-async@npm:2.4.1"
   checksum: b1f06da336029be9c08312309ccdda107558ebf3e1212e960d7a54020f888a449ade2cb8b432a9a6750537ed80119a3c798f7592e8f8518f193ff4c50c13d4a3
@@ -15281,7 +15231,7 @@ resolve@^1.18.1:
   languageName: node
   linkType: hard
 
-"sha.js@npm:^2.4.0, sha.js@npm:^2.4.8":
+"sha.js@npm:^2.4.1, sha.js@npm:^2.4.8":
   version: 2.4.11
   resolution: "sha.js@npm:2.4.11"
   dependencies:
@@ -17635,7 +17585,7 @@ resolve@^1.18.1:
     enhanced-resolve: ^4.3.0
     eslint-scope: ^4.0.3
     json-parse-better-errors: ^1.0.2
-    loader-runner: ^2.4.0
+    loader-runner: ^2.4.1
     loader-utils: ^1.2.3
     memory-fs: ^0.4.1
     micromatch: ^3.1.10
@@ -17883,7 +17833,7 @@ resolve@^1.18.1:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.0.0, ws@npm:^7.0.1, ws@npm:^7.1.2, ws@npm:^7.2.3":
+"ws@npm:^7.0.0, ws@npm:^7.1.2, ws@npm:^7.2.3":
   version: 7.3.1
   resolution: "ws@npm:7.3.1"
   peerDependencies:

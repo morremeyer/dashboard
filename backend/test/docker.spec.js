@@ -30,7 +30,6 @@ const activeNodeReleases = {
   },
   16: {
     endOfLife: new Date('2024-04-30T23:59:59Z')
-
   }
 }
 
