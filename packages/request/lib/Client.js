@@ -47,12 +47,12 @@ class Client {
     return this[kDefaults]
   }
 
-  get baseUrl () {
-    return new URL(this.defaults.options.prefixUrl)
-  }
-
   get responseTimeout () {
     return this.defaults.options.responseTimeout || 15 * 1000
+  }
+
+  get baseUrl () {
+    return new URL(this.defaults.options.prefixUrl)
   }
 
   getSession (options) {
@@ -75,7 +75,7 @@ class Client {
     }
   }
 
-  getRequestHeaders (method, path, searchParams, headers = {}) {
+  getRequestHeaders (path = '', { method = HTTP2_METHOD_GET, searchParams, headers } = {}) {
     const url = this.baseUrl
     const [pathname, search = ''] = path.split(/\?/)
     if (pathname.startsWith('/')) {
@@ -90,23 +90,27 @@ class Client {
     } else {
       url.search = new URLSearchParams(searchParams).toString()
     }
-    const pseudoHeaders = {
-      [HTTP2_HEADER_SCHEME]: url.protocol.replace(/:$/, ''),
-      [HTTP2_HEADER_AUTHORITY]: url.host,
-      [HTTP2_HEADER_METHOD]: method.toUpperCase(),
-      [HTTP2_HEADER_PATH]: url.pathname + url.search
-    }
-    const defaultHeaders = this.defaults.options.headers
-    headers = this.constructor.normalizeHeaders(headers)
-    return Object.assign(pseudoHeaders, defaultHeaders, headers)
+    const { normalizeHeaders } = this.constructor
+    return Object.assign(
+      {
+        [HTTP2_HEADER_SCHEME]: url.protocol.replace(/:$/, ''),
+        [HTTP2_HEADER_AUTHORITY]: url.host,
+        [HTTP2_HEADER_METHOD]: method.toUpperCase(),
+        [HTTP2_HEADER_PATH]: url.pathname + url.search
+      },
+      normalizeHeaders(this.defaults.options.headers),
+      normalizeHeaders(headers)
+    )
   }
 
-  getResponseHeaders (stream, timeout = this.responseTimeout) {
+  getResponseHeaders (stream, { threshold = this.responseTimeout } = {}) {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
-        stream.close(NGHTTP2_CANCEL)
-        reject(new Error(`Request timed out after ${timeout} milliseconds.`))
-      }, timeout)
+        const error = new Error(`Timeout awaiting "response" for ${threshold} ms`)
+        error.name = 'TimeoutError'
+        error.code = 'ETIMEDOUT'
+        reject(error)
+      }, threshold)
       stream.once('response', headers => {
         clearTimeout(timeoutId)
         resolve(headers)
@@ -114,34 +118,42 @@ class Client {
     })
   }
 
-  async fetch (path, { method = HTTP2_METHOD_GET, searchParams, headers = {}, body, signal, ...options } = {}) {
-    const session = this.getSession(options)
-    headers = this.getRequestHeaders(method, path, searchParams, headers)
+  async fetch (path, { method, searchParams, headers, body, signal, ...options } = {}) {
+    headers = this.getRequestHeaders(path, {
+      method,
+      searchParams,
+      headers
+    })
 
     // beforeRequest hooks
     const requestOptions = {
       url: new URL(headers[HTTP2_HEADER_PATH], this.baseUrl.origin),
-      method,
+      method: headers[HTTP2_HEADER_METHOD],
       headers,
       body,
       ...options
     }
     this.executeHooks('beforeRequest', requestOptions)
 
-    const stream = await session.request(headers, { signal })
+    const stream = await this.getSession(options).request(headers, { signal })
     if (body) {
       stream.write(body)
     }
     stream.end()
-    headers = await this.getResponseHeaders(stream, options.responseTimeout)
+    try {
+      headers = await this.getResponseHeaders(stream, {
+        timeout: options.responseTimeout
+      })
+    } catch (err) {
+      stream.close(NGHTTP2_CANCEL)
+      throw err
+    }
 
-    const transformFactory = this.constructor.transformFactory
+    const { transformFactory } = this.constructor
 
     return {
+      request: { options: requestOptions },
       headers,
-      get request () {
-        return { options: requestOptions }
-      },
       get statusCode () {
         return this.headers[HTTP2_HEADER_STATUS]
       },
@@ -242,7 +254,7 @@ class Client {
     return body
   }
 
-  static normalizeHeaders (headers) {
+  static normalizeHeaders (headers = {}) {
     const normalizeHeaders = {}
     for (const [key, value] of Object.entries(headers)) {
       normalizeHeaders[key.toLowerCase()] = value

@@ -6,7 +6,6 @@
 
 'use strict'
 
-const EventEmitter = require('events')
 const http2 = require('http2')
 const net = require('net')
 const crypto = require('crypto')
@@ -25,9 +24,8 @@ const kIntervalId = Symbol('intervalId')
 
 const { NGHTTP2_CANCEL } = http2.constants
 
-class Agent extends EventEmitter {
+class Agent {
   constructor (options = {}) {
-    super()
     const {
       maxCachedTlsSessions = 100,
       timeout = 60000,
@@ -76,11 +74,10 @@ class Agent extends EventEmitter {
 
   getSession (authority, { settings, ...options } = {}) {
     authority = normalizeAuthority(authority)
+    settings = Object.assign({ enablePush: false }, settings)
     options = Object.assign({
       peerMaxConcurrentStreams: 100,
-      settings: Object.assign({
-        enablePush: false
-      }, settings),
+      settings,
       connectTimeout: this.connectTimeout,
       timeout: this.timeout,
       maxOutstandingPings: this.maxOutstandingPings,
@@ -89,6 +86,9 @@ class Agent extends EventEmitter {
     const sid = getSessionId(authority, options)
     let session = this.findSession(sid)
     if (!session) {
+      if (this.tlsSessionCache.has(sid)) {
+        options.session = this.tlsSessionCache.get(sid)
+      }
       session = this.constructor.createSession(authority, options)
       session[kSid] = sid
       this.replaceSessionRequest(session, options)

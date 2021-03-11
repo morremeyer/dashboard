@@ -1480,6 +1480,7 @@ __metadata:
   resolution: "@gardener-dashboard/request@workspace:packages/request"
   dependencies:
     "@gardener-dashboard/logger": "workspace:*"
+    abort-controller: ^3.0.0
     eslint: ^7.7.0
     eslint-config-standard: ^14.1.1
     eslint-plugin-import: ^2.22.0

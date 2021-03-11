@@ -2552,6 +2552,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@gardener-dashboard/request", "workspace:packages/request"],
             ["@gardener-dashboard/logger", "workspace:packages/logger"],
+            ["abort-controller", "npm:3.0.0"],
             ["eslint", "npm:7.9.0"],
             ["eslint-config-standard", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:14.1.1"],
             ["eslint-plugin-import", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:2.22.0"],

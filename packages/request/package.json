@@ -30,6 +30,7 @@
     "type-is": "^1.6.18"
   },
   "devDependencies": {
+    "abort-controller": "^3.0.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
@@ -54,7 +55,9 @@
       "standard",
       "plugin:jest/recommended"
     ],
-    "globals": {},
+    "globals": {
+      "fixtures": true
+    },
     "parserOptions": {
       "ecmaVersion": 11
     },
@@ -66,15 +69,25 @@
     "restoreMocks": true,
     "verbose": true,
     "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "lib/**/*.js"
+    ],
     "testEnvironment": "node",
+    "transformIgnorePatterns": [
+      "/node_modules/",
+      "\\.pnp\\.[^\\/]+$"
+    ],
     "coverageThreshold": {
       "global": {
-        "branches": 60,
-        "functions": 75,
-        "lines": 80,
-        "statements": 80
+        "branches": 73,
+        "functions": 80,
+        "lines": 86,
+        "statements": 85
       }
-    }
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "engines": {
     "node": "^15.11.0",
