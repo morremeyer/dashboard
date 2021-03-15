@@ -14,7 +14,23 @@ function getOwnSymbolProperty (obj, description) {
   return obj[getOwnSymbol(obj, description)]
 }
 
+function nextTick () {
+  return new Promise(resolve => process.nextTick(resolve))
+}
+
+function delay (milliseconds = 0) {
+  return new Promise(resolve => {
+    if (milliseconds > 0) {
+      setTimeout(resolve, milliseconds)
+    } else {
+      setImmediate(resolve)
+    }
+  })
+}
+
 module.exports = {
   getOwnSymbol,
-  getOwnSymbolProperty
+  getOwnSymbolProperty,
+  nextTick,
+  delay
 }

@@ -10,7 +10,7 @@ const http = require('http')
 const http2 = require('http2')
 const { promisify } = require('util')
 const typeis = require('type-is')
-const { Client, globalAgent, isHttpError } = require('../lib')
+const { Client, Agent, isHttpError } = require('../lib')
 
 const {
   HTTP2_HEADER_AUTHORITY,
@@ -21,6 +21,8 @@ const {
   HTTP2_HEADER_CONTENT_TYPE,
   HTTP2_HEADER_CONTENT_LENGTH
 } = http2.constants
+
+jest.useFakeTimers()
 
 const key = `-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCxLZ88tEBAu9ij
@@ -49,7 +51,7 @@ q6x7CGXMzyjojWS3xorx3tQChdLe6AjkvAeKpgyztwKBgGgpT+DPM+qrGDOAbmCU
 B+52febCxuJLSzNj9PCe7it7dxqPHGrJLJKTosCfBQHJ+1Qtwx8gGcAIKzmcurnI
 3fxrwExIxFQVcbUrdxMVj51uHrJnLcW3g+kdL2x9sMd0Yp36uHg1iFar/2TYStLv
 lF9xKvconfKxPjAj8jNGkryI
------END PRIVATE KEY-----`
+-----END PRIVATE KEY-----` // ggignore
 
 const cert = `-----BEGIN CERTIFICATE-----
 MIICpDCCAYwCCQD+Huizwl4icTANBgkqhkiG9w0BAQsFADAUMRIwEAYDVQQDDAls
@@ -67,11 +69,11 @@ HaCbcKIUus1osirh2EGgmRDjOpJAhvHMSP5pzMUhcmiOOGe2f8oLvkMSJfysoip4
 /iOLT4ZY9UoITEAxSHIUin1ljV4AdWVyHkq/OW3aTmrZF+DgQ95dRrhCjjnVYDSM
 aHs7OnRXTyU85lW+uHJjWseni4J0R/SmHM2ZJFnlODcCBLwYYWZpBEFCQ40LLSbI
 GNw5Orfw8xY=
------END CERTIFICATE-----`
+-----END CERTIFICATE-----` // ggignore
 
 function createSecureServer ({ cert, key }) {
   const protocol = 'https:'
-  const hostname = '127.0.0.1'
+  const hostname = 'localhost'
   return new Promise((resolve, reject) => {
     const server = http2.createSecureServer({ cert, key })
     server.close = promisify(server.close)
@@ -134,17 +136,27 @@ function createSecureServer ({ cert, key }) {
   })
 }
 
-describe('End-to-End', function () {
-  let prefixUrl
+describe('Acceptance Tests', function () {
+  let agent
+  let client
   let server
 
   beforeEach(async () => {
     server = await createSecureServer({ cert, key })
-    prefixUrl = server.origin
+    agent = new Agent({
+      keepAliveTimeout: 3000,
+      connectTimeout: 1500,
+      pingInterval: false
+    })
+    client = new Client({
+      prefixUrl: server.origin,
+      agent,
+      ca: cert
+    })
   })
 
   afterEach(async () => {
-    globalAgent.destroy()
+    agent.destroy()
     await server.close()
   })
 
@@ -163,7 +175,6 @@ describe('End-to-End', function () {
           headers,
           body: ''
         }
-        const client = new Client({ prefixUrl })
         const response = await client.fetch('echo')
         expect(response.ok).toBe(true)
         expect(response.redirected).toBe(false)
@@ -188,12 +199,11 @@ describe('End-to-End', function () {
           [HTTP2_HEADER_CONTENT_LENGTH]: body.length.toString(),
           [HTTP2_HEADER_CONTENT_TYPE]: 'text/plain'
         }
-        const client = new Client({ prefixUrl })
         expect.assertions(2)
         try {
           await client.request('status/418')
         } catch (err) {
-        /* eslint-disable jest/no-try-expect */
+          /* eslint-disable jest/no-try-expect */
           expect(isHttpError(err, 418)).toBe(true)
           expect(err).toMatchObject({
             statusCode,
@@ -206,7 +216,6 @@ describe('End-to-End', function () {
 
       it('should send a GET request', async function () {
         const method = 'GET'
-        const client = new Client({ prefixUrl })
         await expect(client.request('echo')).resolves.toEqual({
           body: '',
           headers: {
@@ -224,7 +233,6 @@ describe('End-to-End', function () {
         const headers = {
           'X-Requested-With': 'XmlHttpRequest'
         }
-        const client = new Client({ prefixUrl })
         await expect(client.request('echo', { method, headers, json })).resolves.toEqual({
           body: json,
           headers: {
@@ -241,7 +249,6 @@ describe('End-to-End', function () {
 
     describe('#stream', function () {
       it('should send a GET request', async function () {
-        const client = new Client({ prefixUrl })
         const stream = await client.stream('events/abcde')
         const events = []
         for await (const event of stream) {

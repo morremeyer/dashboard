@@ -26,10 +26,11 @@
   "dependencies": {
     "@gardener-dashboard/logger": "workspace:*",
     "http-errors": "^1.8.0",
-    "quick-lru": "^5.1.1",
+    "lodash": "^4.17.19",
     "type-is": "^1.6.18"
   },
   "devDependencies": {
+    "@gardener-dashboard/test-utils": "workspace:*",
     "abort-controller": "^3.0.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
@@ -79,10 +80,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 73,
-        "functions": 80,
-        "lines": 86,
-        "statements": 85
+        "branches": 80,
+        "functions": 86,
+        "lines": 90,
+        "statements": 89
       }
     },
     "setupFilesAfterEnv": [

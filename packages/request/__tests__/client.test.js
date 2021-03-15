@@ -7,15 +7,15 @@
 'use strict'
 
 const http2 = require('http2')
-const createError = require('http-errors')
 const { globalLogger: logger } = require('@gardener-dashboard/logger')
-const { Client, extend, isHttpError, createHttpError } = require('../lib')
-const { NotFound } = createError
+const { Client, extend } = require('../lib')
 const {
   HTTP2_HEADER_METHOD,
   HTTP2_HEADER_AUTHORITY,
   HTTP2_HEADER_SCHEME,
   HTTP2_HEADER_PATH,
+  HTTP2_HEADER_CONTENT_TYPE,
+  HTTP2_HEADER_CONTENT_LENGTH,
   HTTP2_METHOD_GET,
   HTTP2_METHOD_POST,
   HTTP2_HEADER_STATUS
@@ -25,10 +25,50 @@ jest.useFakeTimers()
 
 describe('Client', () => {
   const prefixUrl = 'https://127.0.0.1:31415/test'
+  const xRequestId = '4711'
+  let agent
+  let client
+  let stream
+
+  beforeEach(() => {
+    stream = {
+      close: jest.fn(),
+      end: jest.fn(),
+      once: jest.fn(),
+      mockBody: jest.fn().mockReturnValue({
+        foo: 'bar',
+        bar: 'foo'
+      }),
+      async * [Symbol.asyncIterator] () {
+        yield Buffer.from('{')
+        let separator
+        for (const [key, value] of Object.entries(this.mockBody())) {
+          if (!separator) {
+            separator = ','
+          } else {
+            yield Buffer.from(separator)
+          }
+          yield Buffer.from(JSON.stringify(key))
+          yield Buffer.from(':')
+          yield Buffer.from(JSON.stringify(value))
+        }
+        yield Buffer.from('}')
+      }
+    }
+    agent = {
+      request: jest.fn().mockResolvedValue(stream)
+    }
+    client = new Client({
+      prefixUrl,
+      agent,
+      headers: {
+        'X-Request-Id': xRequestId
+      }
+    })
+  })
 
   describe('#constructor', () => {
     it('should create a new object', () => {
-      const client = new Client({ prefixUrl })
       expect(client).toBeInstanceOf(Client)
     })
 
@@ -65,8 +105,6 @@ describe('Client', () => {
   })
 
   describe('#getRequestHeaders', () => {
-    let client
-    const xRequestId = '4711'
     const defaultRequestHeaders = {
       [HTTP2_HEADER_SCHEME]: 'https',
       [HTTP2_HEADER_AUTHORITY]: '127.0.0.1:31415',
@@ -74,15 +112,6 @@ describe('Client', () => {
       [HTTP2_HEADER_PATH]: '/test',
       'x-request-id': xRequestId
     }
-
-    beforeEach(() => {
-      client = new Client({
-        prefixUrl,
-        headers: {
-          'X-Request-Id': xRequestId
-        }
-      })
-    })
 
     it('should return request header defaults', () => {
       expect(client.getRequestHeaders()).toEqual({
@@ -133,15 +162,6 @@ describe('Client', () => {
     const responseHeaders = {
       [HTTP2_HEADER_STATUS]: 200
     }
-    let client
-    let stream
-
-    beforeEach(() => {
-      client = new Client({
-        prefixUrl
-      })
-      stream = { once: jest.fn() }
-    })
 
     it('should return the response headers with the default timeout', async () => {
       const result = client.getResponseHeaders(stream)
@@ -169,9 +189,34 @@ describe('Client', () => {
     })
   })
 
+  describe('#fetch', () => {
+    it('should successfully return a response', async () => {
+      const statusCode = 200
+      const contentType = 'application/json'
+      const contentLength = 42
+      const headers = {
+        [HTTP2_HEADER_STATUS]: statusCode,
+        [HTTP2_HEADER_CONTENT_TYPE]: contentType,
+        [HTTP2_HEADER_CONTENT_LENGTH]: contentLength
+      }
+      client.getResponseHeaders = jest.fn().mockResolvedValueOnce(headers)
+      const response = await client.fetch()
+      expect(response).toMatchObject({
+        headers,
+        statusCode,
+        contentType,
+        contentLength,
+        type: 'json',
+        ok: true,
+        redirected: false
+      })
+      const body = await response.body()
+      expect(body).toEqual(stream.mockBody())
+    })
+  })
+
   describe('#stream', () => {
     it('should successfully return a response', async () => {
-      const client = new Client({ prefixUrl })
       const statusCode = 200
       const response = {
         statusCode
@@ -181,7 +226,6 @@ describe('Client', () => {
     })
 
     it('should throw a NotFound error', async () => {
-      const client = new Client({ prefixUrl })
       const statusCode = 404
       const headers = {
         [HTTP2_HEADER_STATUS]: statusCode
@@ -215,28 +259,6 @@ describe('Client', () => {
     it('should create a http client', () => {
       const client = extend({ prefixUrl })
       expect(client).toBeInstanceOf(Client)
-    })
-  })
-
-  describe('#isHttpError', () => {
-    it('should check if an error is a HTTP error', () => {
-      expect(isHttpError(new Error('message'))).toBe(false)
-      expect(isHttpError(createError(404))).toBe(true)
-      expect(isHttpError(createError(404), 404)).toBe(true)
-      expect(isHttpError(createError(404), 410)).toBe(false)
-      expect(isHttpError(createError(404), [410, 404])).toBe(true)
-      expect(isHttpError(createError(404), [401, 403])).toBe(false)
-    })
-  })
-
-  describe('#createHttpError', () => {
-    it('should create different HTTP errors', () => {
-      const error = createHttpError({ statusCode: 404 })
-      expect(error).toMatchObject({
-        statusCode: 404,
-        statusMessage: 'Not Found',
-        message: 'Response code 404 (Not Found)'
-      })
     })
   })
 })

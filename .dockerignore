@@ -76,6 +76,10 @@
 !charts/__fixtures__
 !charts/__mocks__
 
+# include workspace packages/test-utils
+!packages/test-utils/package.json
+!packages/test-utils/lib
+
 # include metadata files
 !VERSION
 !Dockerfile

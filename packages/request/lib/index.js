@@ -8,8 +8,9 @@
 
 const Client = require('./Client')
 const Agent = require('./Agent')
+const errors = require('./errors')
 
-const { extend, createHttpError, isHttpError, normalizeHeaders } = Client
+const { extend } = Client
 const { globalAgent } = Agent
 
 module.exports = {
@@ -17,7 +18,5 @@ module.exports = {
   globalAgent,
   extend,
   Client,
-  createHttpError,
-  isHttpError,
-  normalizeHeaders
+  ...errors
 }

@@ -37,6 +37,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@gardener-dashboard/test-utils": "workspace:*",
     "abort-controller": "^3.0.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",

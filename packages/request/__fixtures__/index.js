@@ -6,8 +6,8 @@
 
 'use strict'
 
-const helper = require('./helper')
-const matchers = require('./matchers')
+const { matchers, helper } = require('@gardener-dashboard/test-utils')
+
 module.exports = {
   helper,
   matchers

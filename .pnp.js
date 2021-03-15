@@ -49,6 +49,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@gardener-dashboard/request",
         "reference": "workspace:packages/request"
+      },
+      {
+        "name": "@gardener-dashboard/test-utils",
+        "reference": "workspace:packages/test-utils"
       }
     ],
     "enableTopLevelFallback": true,
@@ -61,6 +65,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@gardener-dashboard/kube-config", ["workspace:packages/kube-config"]],
       ["@gardener-dashboard/logger", ["workspace:packages/logger"]],
       ["@gardener-dashboard/request", ["workspace:packages/request"]],
+      ["@gardener-dashboard/test-utils", ["workspace:packages/test-utils"]],
       ["gardener-dashboard", ["workspace:."]]
     ],
     "fallbackPool": [
@@ -2486,6 +2491,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@gardener-dashboard/kube-config", "workspace:packages/kube-config"],
             ["@gardener-dashboard/logger", "workspace:packages/logger"],
             ["@gardener-dashboard/request", "workspace:packages/request"],
+            ["@gardener-dashboard/test-utils", "workspace:packages/test-utils"],
             ["abort-controller", "npm:3.0.0"],
             ["delay", "npm:4.4.0"],
             ["eslint", "npm:7.9.0"],
@@ -2552,6 +2558,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@gardener-dashboard/request", "workspace:packages/request"],
             ["@gardener-dashboard/logger", "workspace:packages/logger"],
+            ["@gardener-dashboard/test-utils", "workspace:packages/test-utils"],
             ["abort-controller", "npm:3.0.0"],
             ["eslint", "npm:7.9.0"],
             ["eslint-config-standard", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:14.1.1"],
@@ -2562,8 +2569,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-standard", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:4.0.1"],
             ["http-errors", "npm:1.8.0"],
             ["jest", "npm:26.6.3"],
-            ["quick-lru", "npm:5.1.1"],
+            ["lodash", "npm:4.17.20"],
             ["type-is", "npm:1.6.18"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@gardener-dashboard/test-utils", [
+        ["workspace:packages/test-utils", {
+          "packageLocation": "./packages/test-utils/",
+          "packageDependencies": [
+            ["@gardener-dashboard/test-utils", "workspace:packages/test-utils"],
+            ["eslint", "npm:7.9.0"],
+            ["eslint-config-standard", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:14.1.1"],
+            ["eslint-plugin-import", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:2.22.0"],
+            ["eslint-plugin-node", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:11.1.0"],
+            ["eslint-plugin-promise", "npm:4.2.1"],
+            ["eslint-plugin-standard", "virtual:2c923f59c4675c87278ce3aa7d501b2831091130d417bde2a24ce2608345e7844c4d71578f103362589eb4d651e2514ad746bccd32508a2feda0d63dda053573#npm:4.0.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -17344,15 +17366,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/querystringify-npm-2.2.0-4e77c9f606-6235036be3.zip/node_modules/querystringify/",
           "packageDependencies": [
             ["querystringify", "npm:2.2.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["quick-lru", [
-        ["npm:5.1.1", {
-          "packageLocation": "./.yarn/cache/quick-lru-npm-5.1.1-e38e0edce3-fafb2b2fa1.zip/node_modules/quick-lru/",
-          "packageDependencies": [
-            ["quick-lru", "npm:5.1.1"]
           ],
           "linkType": "HARD",
         }]

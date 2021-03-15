@@ -9,9 +9,10 @@
 const { join } = require('path')
 const http = require('http')
 const http2 = require('http2')
-const createError = require('http-errors')
 const typeis = require('type-is')
+const { pick } = require('lodash')
 const { globalLogger: logger } = require('@gardener-dashboard/logger')
+const { TimeoutError, createHttpError } = require('./errors')
 const { globalAgent } = require('./Agent')
 
 const {
@@ -26,25 +27,20 @@ const {
   NGHTTP2_CANCEL
 } = http2.constants
 
-const kDefaults = Symbol('defaults')
-
 const EOL = 10
 
 class Client {
-  constructor ({ prefixUrl, ...options } = {}) {
+  constructor ({ prefixUrl, agent = globalAgent, ...options } = {}) {
     if (!prefixUrl) {
       throw TypeError('prefixUrl is required')
     }
-    this[kDefaults] = {
+    this.agent = agent
+    this.defaults = {
       options: {
         prefixUrl,
         ...options
       }
     }
-  }
-
-  get defaults () {
-    return this[kDefaults]
   }
 
   get responseTimeout () {
@@ -53,13 +49,6 @@ class Client {
 
   get baseUrl () {
     return new URL(this.defaults.options.prefixUrl)
-  }
-
-  getSession (options) {
-    const origin = this.baseUrl.origin
-    const { ca, rejectUnauthorized, key, cert, id } = this.defaults.options
-    const defaultOptions = { ca, rejectUnauthorized, key, cert, id }
-    return globalAgent.getSession(origin, Object.assign(defaultOptions, options))
   }
 
   executeHooks (name, ...args) {
@@ -106,10 +95,7 @@ class Client {
   getResponseHeaders (stream, { threshold = this.responseTimeout } = {}) {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
-        const error = new Error(`Timeout awaiting "response" for ${threshold} ms`)
-        error.name = 'TimeoutError'
-        error.code = 'ETIMEDOUT'
-        reject(error)
+        reject(new TimeoutError(`Timeout awaiting "response" for ${threshold} ms`))
       }, threshold)
       stream.once('response', headers => {
         clearTimeout(timeoutId)
@@ -135,7 +121,12 @@ class Client {
     }
     this.executeHooks('beforeRequest', requestOptions)
 
-    const stream = await this.getSession(options).request(headers, { signal })
+    const defaultOptions = pick(this.defaults.options, ['ca', 'rejectUnauthorized', 'key', 'cert', 'id'])
+    const stream = await this.agent.request(headers, {
+      ...defaultOptions,
+      ...options,
+      signal
+    })
     if (body) {
       stream.write(body)
     }
@@ -211,7 +202,7 @@ class Client {
     const response = await this.fetch(path, options)
     const statusCode = response.statusCode
     if (statusCode >= 400) {
-      throw this.constructor.createHttpError({
+      throw createHttpError({
         statusCode,
         headers: response.headers,
         body: await response.body()
@@ -245,7 +236,7 @@ class Client {
     this.executeHooks('afterResponse', responseOptions)
 
     if (statusCode >= 400) {
-      throw this.constructor.createHttpError({
+      throw createHttpError({
         statusCode,
         headers,
         body
@@ -277,36 +268,6 @@ class Client {
       default:
         return data => data
     }
-  }
-
-  static createHttpError ({ statusCode, statusMessage = http.STATUS_CODES[statusCode], response, headers, body }) {
-    const properties = { statusMessage }
-    if (headers) {
-      properties.headers = { ...headers }
-    }
-    if (body) {
-      properties.body = body
-    }
-    if (response) {
-      properties.response = response
-    }
-    const message = body && body.message
-      ? body.message
-      : `Response code ${statusCode} (${statusMessage})`
-    return createError(statusCode, message, properties)
-  }
-
-  static isHttpError (err, expectedStatusCode) {
-    if (!createError.isHttpError(err)) {
-      return false
-    }
-    if (expectedStatusCode) {
-      if (Array.isArray(expectedStatusCode)) {
-        return expectedStatusCode.indexOf(err.statusCode) !== -1
-      }
-      return expectedStatusCode === err.statusCode
-    }
-    return true
   }
 
   static extend (options) {
