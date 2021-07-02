@@ -1,0 +1,43 @@
+name: Chart artifact publishing
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release:
+    name: Package and publish chart artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Archive artifacts for charts/dashboard
+        run: |
+          tar -czf charts.tar.gz charts/gardener-dashboard charts/_versions.tpl
+
+      - name: Upload charts.tar.gz to release
+        id: upload_archive
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: charts.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true
+
+      - name: Trigger sync in gardener/charts
+        # See https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Token ${{ secrets.CHARTS_ACCESS_TOKEN }}" \
+            https://api.github.com/repos/morremeyer/charts-2/actions/workflows/update-charts.yaml/dispatches \
+            -d '{"ref":"main", "inputs": {"repository": "dashboard", "charts_url": "${{ steps.upload_archive.outputs.browser_download_url }}", "tag": "${{ github.ref }}"}'
