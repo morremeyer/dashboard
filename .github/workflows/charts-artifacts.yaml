@@ -1,0 +1,51 @@
+name: Chart artifact publishing
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release:
+    name: Package and publish chart artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Archive artifacts for charts/dashboard
+        run: |
+          tar -czf charts.tar.gz charts/gardener-dashboard charts/_versions.tpl
+
+      - name: Upload charts.tar.gz to release
+        id: upload_archive
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: charts.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true
+
+      - name: Get token for gardener-github-workflows app
+        id: gardener-github-workflows
+        # getsentry/action-github-app-token@v1, but the exact commit
+        uses: getsentry/action-github-app-token@8f656f2b31c7aaef91ba5cfdbe308d2a4d72e4f4
+        with:
+          app_id: ${{ secrets.GARDENER_GITHUB_WORKFLOWS_APP_ID }}
+          private_key: ${{ secrets.GARDENER_GITHUB_WORKFLOWS_APP_PRIVATE_KEY }}
+
+      - name: Trigger sync in gardener/charts
+        # See https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
+        # Once curl 7.76.0 or newer is available, replace --fail with --fail-with-body, see https://github.com/curl/curl/pull/6449
+        run: |
+          set -x
+          curl --silent --show-error \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Token ${{ steps.gardener-github-workflows.outputs.token }}}" \
+            https://api.github.com/repos/morremeyer/charts-2/actions/workflows/update-charts.yaml/dispatches \
+            -d '{"ref":"master", "inputs": {"repository": "dashboard", "charts_url": "${{ steps.upload_archive.outputs.browser_download_url }}", "tag": "${{ github.ref }}"}'
